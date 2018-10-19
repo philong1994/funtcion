@@ -1,0 +1,100 @@
+Validate form Jquery
+$(document).ready(function(){
+        $('form[name=frm-getinfo]').submit(function (event) {
+            var responeRecaptcha = grecaptcha.getResponse();
+            var valid = true;
+            if($('input[name=txtName]').val() == ''){
+                valid = false;
+                $('.fullnameMsg').text('Please enter your full name.');
+            } else{
+                $('.fullnameMsg').text('');
+            }
+
+            if($('input[name=txtEmail]').val() == ''){
+                valid = false;
+                $('.emailMsg').text('Please enter your email address.');
+            }else if( !emailValid($('input[name=txtEmail]').val()) ){
+                valid = false;
+                $('.emailMsg').text('Email is invalid.');
+            }
+            else{
+                $('.emailMsg').text('');
+            }
+
+            if($('input[name=txtAddress]').val() == ''){
+                valid = false;
+                $('.addressMsg').text('Please enter your address.');
+            } else{
+                $('.addressMsg').text('');
+            }
+
+            if ($('input[name=txtRegisTel]').val() == ''){
+                valid = false;
+                $('.phoneMsg').text('Please enter phone number.');
+            }else if (! isValidNumber){
+                valid = false;
+                $('.phoneMsg').text('This phone number format is not recognized.');
+            }
+            else {
+                var country_data = $('input[name=txtRegisTel]').intlTelInput('getSelectedCountryData');
+                var phone_number = $('input[name=txtRegisTel]').intlTelInput('getNumber');
+                $('input[name=txtPhoneNumber]').val(phone_number);
+                $('input[name=txt_iso2]').val(country_data.iso2);
+                $('.phoneMsg').text('');
+            }
+            if($('select[name=sltquantity]').val() == 0){
+                valid = false;
+                $('.quantityMsg').text('Please select quantity of member join.');
+            } else{
+                $('.quantityMsg').text('');
+            }
+            if(responeRecaptcha.length == 0)
+            {
+                $(".captchaMsg").text("Please click on the reCAPTCHA box.");
+
+                valid = false;
+            }
+            else
+            {
+                $(".captchaMsg").text('');
+            }
+            if (!valid)
+                event.preventDefault();
+            else {
+                $('input[name=txtName]').prop('readonly', true);
+                $('input[name=txtEmail]').prop('readonly', true);
+                $('input[name=txtAddress]').prop('readonly', true);
+                $('input[name=txtRegisTel]').prop('readonly', true);
+                $('select[name=sltquantity]').css('pointer-events','none');
+                $('button[name=btnGetinfo]').prop('disabled', true);
+                $('form[name=frm-getinfo]').submit();
+            }
+        });
+    });
+	//check valid email
+    function emailValid(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+// Check input number
+    function checkNumber(number){
+        var pattern = "0123456789";
+        var len = number.value.length;
+        if (len != 0)
+        {
+            var index = 0;
+
+            while ((index < len) && (len != 0))
+                if (pattern.indexOf(number.value.charAt(index)) === -1)
+                {
+                    if (index === len-1)
+                        number.value = number.value.substring(0, len-1);
+                    else if (index === 0)
+                        number.value = number.value.substring(1, len);
+                    else number.value = number.value.substring(0, index)+number.value.substring(index+1, len);
+                    index = 0;
+                    len = number.value.length;
+                }
+                else index++;
+        }
+    }

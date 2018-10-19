@@ -1,0 +1,8 @@
+﻿// Hàm cắt chuỗi
+public function subString($str,$n){
+        $str = trim($str);
+        if(strlen($str)<$n) return $str;
+        $html    = substr($str,0,$n);
+        $html    = substr($html,0,strrpos($html,' '));
+        return $html.' ...';
+    }
