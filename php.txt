@@ -6,3 +6,10 @@ public function subString($str,$n){
         $html    = substr($html,0,strrpos($html,' '));
         return $html.' ...';
     }
+//convert keyword
+function convertkeyword($strparama){
+    $keywords = strtolower($strparama);
+    $keywords = preg_replace('/[^A-Za-z0-9\s]/', '', $keywords);
+    $keywords = str_replace(' ','-',$keywords);
+    return $keywords;
+}
